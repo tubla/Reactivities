@@ -23,6 +23,14 @@ namespace API
                 opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly(typeof(DataContext).Assembly.GetName().Name));
             });
 
+            builder.Services.AddCors(opt =>
+            {
+                opt.AddPolicy("CorsPolicy", policy =>
+                {
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+                });
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -32,7 +40,7 @@ namespace API
                 app.UseSwaggerUI();
             }
 
-
+            app.UseCors("CorsPolicy");
             app.UseAuthorization();
 
 
